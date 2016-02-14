@@ -19,12 +19,15 @@ local c = {}
 function c:onEnter (menus)
 
 	local lines = {}
-	io.input (self.filename)
-	self.filename = nil
+	-- io.input (self.filename)
+	-- self.filename = nil
 
-	for line in io.lines () do
-		table.insert (lines, line)
-	end
+	-- for line in io.lines () do
+	-- 	table.insert (lines, line)
+	-- end
+
+	table.insert (lines, "TESTING")
+
 	self.scrollableMenuItem = ScrollableMenuItem (lines, 16)
 	self:addMenuItem (self.scrollableMenuItem)
 

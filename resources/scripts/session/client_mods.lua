@@ -9,10 +9,11 @@ local function main ()
 
 	local permissions = 
 	{
-		blocks = true,
-		client = true,
-		file = true,
-		player = true,
+		blocks = 	true,
+		client = 	true,
+		file = 		true,
+		player = 	true,
+		inputs = 	true;
 	}
 
 	Mods.loadMod (mods, "attract_mode", permissions)
