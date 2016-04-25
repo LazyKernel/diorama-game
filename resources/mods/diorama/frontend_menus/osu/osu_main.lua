@@ -9,8 +9,8 @@ local Paint = require ("resources/mods/diorama/frontend_menus/paint/paint_app")
 
 --------------------------------------------------
 local function onUsePaintClicked(menuItem, menu)
-    menu.paint = Paint (menu)
-    menu.paint:startApp ()
+    menu.app = Paint (menu)
+    menu.app:startApp ()
 end
 
 --------------------------------------------------
@@ -27,13 +27,13 @@ end
 
 --------------------------------------------------
 function c:onExit ()
-    self.paint = nil
+    self.app = nil
 end
 
 --------------------------------------------------
 function c:onUpdate (x, y, was_left_clicked)
-    if self.paint then
-		self.paint:update (x, y, was_left_clicked)
+    if self.app then
+		self.app:update (x, y, was_left_clicked)
 	else
 		return self.parent.onUpdate (self, x, y, was_left_clicked)
 	end
@@ -41,15 +41,15 @@ end
 
 --------------------------------------------------
 function c:onKeyClicked (keyCode, keyCharacter, keyModifiers, menus)
-	if self.paint then
-		self.paint:onKeyClicked (keyCode, keyCharacter, keyModifiers, menus)
+	if self.app then
+		self.app:onKeyClicked (keyCode, keyCharacter, keyModifiers, menus)
 	end
 end
 
 --------------------------------------------------
 function c:onRender ()
-    if self.paint then
-        self.paint:render ()
+    if self.app then
+        self.app:render ()
     else
         return self.parent.onRender (self)
     end
@@ -57,7 +57,7 @@ end
 
 --------------------------------------------------
 function c:recordAppClose ()
-    self.paint = nil
+    self.app = nil
 end
 
 --------------------------------------------------
@@ -66,13 +66,13 @@ return function()
 
 	local properties =
 	{
-        paint = nil,
+        app = nil,
 	}
 
 	Mixin.CopyTo (instance, properties)
 	Mixin.CopyToAndBackupParents (instance, c)
 
-	instance:addMenuItem (ButtonMenuItem ("Paint", onUsePaintClicked))
+	instance:addMenuItem (ButtonMenuItem ("Circle slamming", onUsePaintClicked))
 	instance:addMenuItem (BreakMenuItem ())
 	instance:addMenuItem (ButtonMenuItem ("Return To Main Menu", onMainMenuClicked))
 	instance:addMenuItem (BreakMenuItem ())
