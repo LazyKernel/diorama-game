@@ -67,7 +67,7 @@ function c:onRender ()
     Renderer.drawLine (x3, y3, x1, y1, 0x00ee00ff)
 
     --Renderer.drawLine (x11, y11, x12, y12, 0x555599ff)
-    Renderer.drawTriangle ({ Vec.new (x11, y11), Vec.new (x12, y12), Vec.new (x13, y13) }, 0xee00eeff)
+    Renderer.drawTriangle ({ Vec.new (x11, y11, 0), Vec.new (x12, y12, 0), Vec.new (x13, y13, 0) }, 0xee00eeff)
     --Renderer.drawLine (x13, y13, x11, y11, 0xee00eeff)
 
     Renderer.drawModels ()

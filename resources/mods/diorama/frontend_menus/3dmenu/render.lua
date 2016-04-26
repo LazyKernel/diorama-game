@@ -8,6 +8,7 @@ local s = {}
 
 --------------------------------------------------
 s.screenBuffer = {}
+s.zBuffer = {}
 s.width = 495
 s.height = 200
 s.xOff = 10
@@ -64,6 +65,7 @@ end
 --------------------------------------------------
 function s.init()
     s.screenBuffer = createCanvas (s)
+    s.zBuffer = s.screenBuffer
 end
 
 --------------------------------------------------
@@ -99,7 +101,7 @@ function s.drawModels ()
             for k = 1, 3 do
                 local worldCoords = mdl.obj.v [verts [k].v]
                 -- TODO: / 2 not / 20
-                screenCoords [k] = Vec.new ((worldCoords.x + 1) * s.width / 20 + 100, (worldCoords.y + 1) * s.height / 20 + 100)
+                screenCoords [k] = Vec.new ((worldCoords.x + 1) * s.width / 20 + 100, (worldCoords.y + 1) * s.height / 20 + 100, worldCoords.z)
             end
             s.drawTriangle ( { screenCoords [1], screenCoords [2] , screenCoords [3] }, Color.generateRandomColor (0xffffff) + 0xff)
         end
@@ -123,7 +125,18 @@ function s.drawTriangle (tPoints, color)
         for py = bboxMin.y, bboxMax.y do
             local bcscreen = barycentric (tPoints, Vec.new (px, py))
             if bcscreen.x > 0 and bcscreen.y > 0 and bcscreen.z > 0 then
-                s.setPixel (px, py, color)
+                local pz = 0
+                pz = pz + tPoints [1].z + bcscreen.x
+                pz = pz + tPoints [2].z + bcscreen.y
+                pz = pz + tPoints [3].z + bcscreen.z
+
+                py = math.floor(py)
+                px = math.floor(px)
+
+                if s.zBuffer [py][px] < pz then
+                    s.zBuffer [py][px] = pz
+                    s.setPixel (px, py, color)
+                end
             end
         end
     end
@@ -181,6 +194,7 @@ function s.resetBuffer ()
     for y = 1, s.height do
         for x = 1, s.width do
             s.screenBuffer [y][x] = 0
+            s.zBuffer [y][x] = 0
         end
     end
 end

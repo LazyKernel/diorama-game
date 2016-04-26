@@ -3,7 +3,7 @@ local v = {}
 
 --------------------------------------------------
 function v.new (x, y, z)
-    if not z then
+    if z == nil then
         return { x = x, y = y }
     else
         return { x = x, y = y, z = z }
