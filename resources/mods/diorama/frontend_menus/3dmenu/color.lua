@@ -1,3 +1,5 @@
+math.randomseed (os.time ())
+
 --------------------------------------------------
 local c = {}
 
@@ -58,6 +60,15 @@ end
 --------------------------------------------------
 function c.scalarMul (color, scalar)
     return c.getColor (c.getRed (color) / 255 * scalar, c.getGreen (color) / 255 * scalar, c.getBlue (color) / 255 * scalar)
+end
+
+--------------------------------------------------
+function c.generateRandomColor (mix)
+    local mr, mg, mb = c.getComponents (mix)
+    local rr = (math.random(0, 255) + mr) / 2
+    local rg = (math.random(0, 255) + mg) / 2
+    local rb = (math.random(0, 255) + mb) / 2
+    return c.getColor (rr, rg, rb)
 end
 
 --------------------------------------------------

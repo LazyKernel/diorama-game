@@ -84,7 +84,26 @@ function s.loadModel (fileName)
 
     if not obj then return end
 
-    s.models [#s.models + 1] = { pos = { x = 0.0, y = 0.0, z = 0.0 }, scale = { x = 1.0, y = 1.0, z = 1.0 }, rotation = { x = 0.0, y = 0.0, z = 0.0, w = 1.0 }, obj }
+    s.models [#s.models + 1] = { pos = { x = 0.0, y = 0.0, z = 0.0 }, scale = { x = 1.0, y = 1.0, z = 1.0 }, rot = { x = 0.0, y = 0.0, z = 0.0, w = 1.0 }, obj = obj }
+end
+
+--------------------------------------------------
+-- TODO: OPTIMIZE
+function s.drawModels ()
+    for i = 1, #s.models do
+        local mdl = s.models [i]
+
+        for j = 1, #mdl.obj.f do
+            local verts = mdl.obj.f [j]
+            local screenCoords = {}
+            for k = 1, 3 do
+                local worldCoords = mdl.obj.v [verts [k].v]
+                -- TODO: / 2 not / 20
+                screenCoords [k] = Vec.new ((worldCoords.x + 1) * s.width / 20 + 100, (worldCoords.y + 1) * s.height / 20 + 100)
+            end
+            s.drawTriangle ( { screenCoords [1], screenCoords [2] , screenCoords [3] }, Color.generateRandomColor (0xffffff) + 0xff)
+        end
+    end
 end
 
 --------------------------------------------------

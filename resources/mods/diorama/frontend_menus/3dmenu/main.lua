@@ -69,6 +69,9 @@ function c:onRender ()
     --Renderer.drawLine (x11, y11, x12, y12, 0x555599ff)
     Renderer.drawTriangle ({ Vec.new (x11, y11), Vec.new (x12, y12), Vec.new (x13, y13) }, 0xee00eeff)
     --Renderer.drawLine (x13, y13, x11, y11, 0xee00eeff)
+
+    Renderer.drawModels ()
+
     Renderer.renderScene ()
 end
 
@@ -91,6 +94,7 @@ return function()
     instance:addMenuItem (ButtonMenuItem ("Return To Main Menu", onMainMenuClicked))
 
     Renderer.init ()
+    Renderer.loadModel ("resources/mods/diorama/frontend_menus/3dmenu/obj/teapot.obj")
 
 	return instance
 end
