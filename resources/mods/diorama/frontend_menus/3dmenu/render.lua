@@ -1,5 +1,7 @@
 --------------------------------------------------
 local Color = require ("resources/mods/diorama/frontend_menus/3dmenu/color")
+local Vec = require ("resources/mods/diorama/frontend_menus/3dmenu/vec")
+local OBJLoader = require ("resources/mods/diorama/frontend_menus/3dmenu/objloader")
 
 --------------------------------------------------
 local s = {}
@@ -10,6 +12,9 @@ s.width = 495
 s.height = 200
 s.xOff = 10
 s.yOff = 50
+
+--------------------------------------------------
+s.models = {}
 
 --------------------------------------------------
 local function tprint (tbl, indent)
@@ -48,6 +53,15 @@ local function createCanvas (self)
 end
 
 --------------------------------------------------
+-- vec2, vec2
+-- returns vec3
+local function barycentric (tPoints, point)
+    local vecu = Vec.cross (Vec.new (tPoints [3].x - tPoints [1].x, tPoints [2].x - tPoints [1].x, tPoints [1].x - point.x), Vec.new (tPoints [3].y - tPoints [1].y, tPoints [2].y - tPoints [1].y, tPoints [1].y - point.y))
+    if math.abs(vecu.z) < 1 then return Vec.new (-1, 1, 1) end
+    return Vec.new (1.0 - (vecu.x + vecu.y) / vecu.z, vecu.y / vecu.z, vecu.x / vecu.z)
+end
+
+--------------------------------------------------
 function s.init()
     s.screenBuffer = createCanvas (s)
 end
@@ -62,6 +76,38 @@ function s.setPixel (x, y, color)
     end
 
     s.screenBuffer [yf][xf] = color
+end
+
+--------------------------------------------------
+function s.loadModel (fileName)
+    local obj = OBJLoader.load (fileName)
+
+    if not obj then return end
+
+    s.models [#s.models + 1] = { pos = { x = 0.0, y = 0.0, z = 0.0 }, scale = { x = 1.0, y = 1.0, z = 1.0 }, rotation = { x = 0.0, y = 0.0, z = 0.0, w = 1.0 }, obj }
+end
+
+--------------------------------------------------
+function s.drawTriangle (tPoints, color)
+    local bboxMin = Vec.new (s.width, s.height)
+    local bboxMax = Vec.new (1, 1)
+    local clamp = Vec.new (s.width, s.height)
+
+    for i = 1, 3 do
+        bboxMin.x = math.max (0, math.min (bboxMin.x, tPoints [i].x))
+        bboxMax.x = math.min (clamp.x, math.max (bboxMax.x, tPoints [i].x))
+        bboxMin.y = math.max (0, math.min (bboxMin.y, tPoints [i].y))
+        bboxMax.y = math.min (clamp.y, math.max (bboxMax.y, tPoints [i].y))
+    end
+
+    for px = bboxMin.x, bboxMax.x do
+        for py = bboxMin.y, bboxMax.y do
+            local bcscreen = barycentric (tPoints, Vec.new (px, py))
+            if bcscreen.x > 0 and bcscreen.y > 0 and bcscreen.z > 0 then
+                s.setPixel (px, py, color)
+            end
+        end
+    end
 end
 
 --------------------------------------------------
