@@ -94,7 +94,7 @@ return function()
     instance:addMenuItem (ButtonMenuItem ("Return To Main Menu", onMainMenuClicked))
 
     Renderer.init ()
-    Renderer.loadModel ("resources/mods/diorama/frontend_menus/3dmenu/obj/teapot.obj")
+    Renderer.loadModel ("resources/mods/diorama/frontend_menus/3dmenu/obj/cube.obj")
 
 	return instance
 end

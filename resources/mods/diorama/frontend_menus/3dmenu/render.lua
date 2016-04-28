@@ -101,7 +101,7 @@ function s.drawModels ()
             for k = 1, 3 do
                 local worldCoords = mdl.obj.v [verts [k].v]
                 -- TODO: / 2 not / 20
-                screenCoords [k] = Vec.new ((worldCoords.x + 1) * s.width / 20 + 100, (worldCoords.y + 1) * s.height / 20 + 100, worldCoords.z)
+                screenCoords [k] = Vec.new ((worldCoords.x + 1) * s.width / 20 + 100, (-worldCoords.y + 1) * s.height / 20 + 100, worldCoords.z)
             end
             s.drawTriangle ( { screenCoords [1], screenCoords [2] , screenCoords [3] }, Color.generateRandomColor (0xffffff) + 0xff)
         end
