@@ -1,4 +1,4 @@
-local TickerLine = require ("resources/mods/diorama/chat/ticker_line")
+inklocal TickerLine = require ("resources/mods/diorama/chat/ticker_line")
 
 --------------------------------------------------
 local instance = nil
