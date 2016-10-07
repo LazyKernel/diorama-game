@@ -81,7 +81,6 @@ function d.drawAllElements ()
 end
 
 --------------------------------------------------
--- My buttons look nicer than your buttons Kappa
 function d.drawCustomButton (x, y, scale, text, isMouseOver)
     if isMouseOver then
         dio.drawing.font.drawBox (x, y, scale * 4, scale * 3, 0xddddddff)

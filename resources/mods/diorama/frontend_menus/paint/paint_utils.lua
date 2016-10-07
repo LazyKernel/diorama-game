@@ -4,10 +4,6 @@ local ListUtils = require ("resources/mods/diorama/frontend_menus/paint/list_uti
 local d = {}
 
 --------------------------------------------------
-local rx = { 0, 1, 0, -1 } -- x relative neighbors
-local ry = { -1, 0, 1, 0 } -- y relative neighbors
-
---------------------------------------------------
 function d.savePaintFile (canvas, fileName, h, w)
     if fileName == nil or fileName == ".brs" then
         return -1
@@ -98,6 +94,11 @@ function d.blendColors (color1, color2)
 
     return bit32.lshift (r, 24) + bit32.lshift (g, 16) + bit32.lshift (b, 8) + a
 end
+
+
+--------------------------------------------------
+local rx = { 0, 1, 0, -1 } -- x relative neighbors
+local ry = { -1, 0, 1, 0 } -- y relative neighbors
 
 --------------------------------------------------
 function d.floodFill (newColor, oldColor, x, y, canvas, canvasW, canvasH)

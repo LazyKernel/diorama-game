@@ -76,9 +76,6 @@ return function()
 	instance:addMenuItem (BreakMenuItem ())
 	instance:addMenuItem (ButtonMenuItem ("Return To Main Menu", onMainMenuClicked))
 	instance:addMenuItem (BreakMenuItem ())
-    instance:addMenuItem (LabelMenuItem ("Paint tool: Click the big black dududu dudu dudu duduu"))
-    instance:addMenuItem (LabelMenuItem ("Eraser tool: Click the eraser-looking thing"))
-    instance:addMenuItem (LabelMenuItem ("Picker tool: Click the thing that looks like a nail"))
-
+    instance:addMenuItem (LabelMenuItem ("Current tools: paint, pick, fill, erase, undo, redo"))
 	return instance
 end

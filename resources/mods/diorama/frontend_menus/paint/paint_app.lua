@@ -3,11 +3,6 @@ local Dialog = require ("resources/mods/diorama/frontend_menus/paint/dialog_util
 local Utils = require ("resources/mods/diorama/frontend_menus/paint/paint_utils")
 local TimeTraveller = require ("resources/mods/diorama/frontend_menus/paint/timetraveller")
 
---------------------------------------------------
-local lastClickPos = {
-	0, 0,
-}
-
 local overlay = {
 	title = "title",
 	isShown = false,
@@ -16,23 +11,6 @@ local overlay = {
 	height,
 	finished = false,
 	error,
-}
-
---------------------------------------------------
-local colors = {
-	0x000000ff,
-	0xff0000ff,
-	0xffc0cbff,
-	0x008080ff,
-	0x0000ffff,
-	0xeeeeeeff,
-	0xffff00ff,
-	0x00ff00ff,
-	0x660066ff,
-	0x008000ff,
-	0x333333ff,
-	0xdaa520ff,
-	0x00ffffff,
 }
 
 --------------------------------------------------
@@ -67,6 +45,7 @@ end
 local c = {}
 
 --------------------------------------------------
+-- called from dialog_element.lua update()
 function c:onOkClicked ()
 	local textField = Dialog.getFirstElementofType (2)
 	local fileName = textField.text
@@ -109,6 +88,7 @@ function c:onOkClicked ()
 end
 
 --------------------------------------------------
+-- called from dialog_element.lua update()
 function c:onCancelClicked ()
 	overlay.isShown = false
 	overlay.finished = false
@@ -121,8 +101,8 @@ function c:onClickerino (x, y)
 	local pickerLocationY = self.t + 10
 	self.colorCurrentFocus = 0
 
-	if x >= self.l + self.w * self.cellSize + 17 and y >= self.t + (#colors + 1) * self.cellSize + (#colors + 1) * 5 + 2
-	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + (#colors + 1) * self.cellSize + (#colors + 1) * 5 + 2 + self.cellSize * 3 then
+	if x >= self.l + self.w * self.cellSize + 17 and y >= self.t + 14 * self.cellSize + 72
+	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + 42 * self.cellSize + 72 then
 
 		overlay.title = "Save"
 		overlay.isShown = true
@@ -131,8 +111,8 @@ function c:onClickerino (x, y)
 		overlay.width = self.w
 		overlay.height = self.h
 
-	elseif x >= self.l + self.w * self.cellSize + 17 and y >= self.t + (#colors + 2) * self.cellSize + (#colors + 2) * 5 + 17
-	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + (#colors + 2) * self.cellSize + (#colors + 2) * 5 + 17 + self.cellSize * 3 then
+	elseif x >= self.l + self.w * self.cellSize + 17 and y >= self.t + 15 * self.cellSize + 92
+	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + 45 * self.cellSize + 92 then
 
 		overlay.title = "Load"
 		overlay.isShown = true
@@ -173,11 +153,11 @@ function c:onHoverino (x, y)
 	local pickerLocationX = (self.l + self.w * self.cellSize) + self.colorPickerSize / 2
 	local pickerLocationY = self.t + 10
 
-	if x >= self.l + self.w * self.cellSize + 17 and y >= self.t + (#colors + 1) * self.cellSize + (#colors + 1) * 5 + 2
-	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + (#colors + 1) * self.cellSize + (#colors + 1) * 5 + 2 + self.cellSize * 3 then
+	if x >= self.l + self.w * self.cellSize + 17 and y >= self.t + 14 * self.cellSize + 72
+	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + 42 * self.cellSize + 72 then
 		self.saveHover = true
-	elseif x >= self.l + self.w * self.cellSize + 17 and y >= self.t + (#colors + 2) * self.cellSize + (#colors + 2) * 5 + 17
-	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + (#colors + 2) * self.cellSize + (#colors + 2) * 5 + 17 + self.cellSize * 3 then
+	elseif x >= self.l + self.w * self.cellSize + 17 and y >= self.t + 15 * self.cellSize + 92
+	and x <= self.l + self.w * self.cellSize + 17 + self.cellSize * 4 and y <= self.t + 45 * self.cellSize + 92 then
 		self.loadHover = true
 	elseif x >= pickerLocationX and x <= pickerLocationX + self.colorPickerSize and y >= pickerLocationY + 40 and y <= pickerLocationY + 40 + self.colorPickerSize / 2 then
 		self.colorMouseOver = 1
@@ -273,11 +253,6 @@ function c:update (x, y, was_left_clicked)
 		self.canvas = overlay.canvas
 		overlay.finished = false
 		overlay.error = nil
-	end
-
-	if was_left_clicked then
-		lastClickPos [1] = x
-		lastClickPos [2] = y
 	end
 
 	if x > self.l + self.w * self.cellSize + self.cellSize then
@@ -446,10 +421,10 @@ function c:render ()
 				dio.drawing.font.drawBox (self.l + colIdx * self.cellSize, self.t + rowIdx * self.cellSize, self.cellSize, self.cellSize, cell)
 			end
 
-			if colIdx == self.w and rowIdx <= #colors + 2 then
-				if rowIdx == #colors + 1 then
+			if colIdx == self.w and rowIdx <= 15 then
+				if rowIdx == 14 then
 					Dialog.drawCustomButton (self.l + colIdx * self.cellSize + 17, self.t + rowIdx * self.cellSize + rowIdx * 5 + 2, self.cellSize, "Save", self.saveHover)
-				elseif rowIdx == #colors + 2 then
+				elseif rowIdx == 15 then
 					Dialog.drawCustomButton (self.l + colIdx * self.cellSize + 17, self.t + rowIdx * self.cellSize + rowIdx * 5 + 17, self.cellSize, "Load", self.loadHover)
 				end
 			end
@@ -488,12 +463,6 @@ function c:render ()
 			Dialog.drawErrorMessage (175, 130, overlay.error)
 		end
 	end
-
-	-- debugging
-	--dio.drawing.font.drawString (3, 5, string.format("%s: %i", "x", lastClickPos [1]), 0xffffffff)
-	--dio.drawing.font.drawString (3, 15, string.format("%s: %i", "y", lastClickPos [2]), 0xffffffff)
-
-	--dio.drawing.font.drawString (3, 25, string.format("%s: %x", "col", self.currentColor), 0xffffffff)
 end
 
 --------------------------------------------------

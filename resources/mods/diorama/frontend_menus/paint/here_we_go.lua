@@ -1,7 +1,6 @@
 --------------------------------------------------
 local s = {}
 
---dio.drawing.font.drawBox (x + , y + , scale - , scale - , isMouseOver and  or )
 --------------------------------------------------
 -- and or works good enough here
 function s.drawPen (x, y, scale, isMouseOver, isCurrentTool)
