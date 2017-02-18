@@ -45,7 +45,7 @@ local modSettings =
         resources = true,
     },
 
-    callbacks = 
+    callbacks =
     {
         onLoad = onLoad,
         onUnload = onUnload,

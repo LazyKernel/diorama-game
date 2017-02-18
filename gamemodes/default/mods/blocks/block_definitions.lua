@@ -40,7 +40,7 @@ local function makeEntityModel (model, options)
 end
 
 --------------------------------------------------
-local entityModels = 
+local entityModels =
 {
     makeEntityModel ("test_entity_model"),
 }
@@ -56,7 +56,7 @@ local modes = dio.types.tileModes
 
 local grassRandom =
 {
-    mode = modes.RANDOM_4, 
+    mode = modes.RANDOM_4,
     uvs = {{4, 13}, {5, 13}, {6, 13}, {7, 13}},
 }
 
@@ -73,11 +73,11 @@ end
 local grassTopAutotile =
 {
     mode = modes.AUTOTILE_4,
-    uvs = 
+    uvs =
     {
-        grass (0, 14), grass (1, 14), grass (2, 14), grass (3, 14), 
-        grass (4, 14), grass (5, 14), grass (6, 14), grass (7, 14), 
-        grass (8, 14), grass (9, 14), grass (10, 14), grass (11, 14), 
+        grass (0, 14), grass (1, 14), grass (2, 14), grass (3, 14),
+        grass (4, 14), grass (5, 14), grass (6, 14), grass (7, 14),
+        grass (8, 14), grass (9, 14), grass (10, 14), grass (11, 14),
         grass (12, 14), grass (13, 14), grass (14, 14), grassRandom
     },
 }
@@ -102,7 +102,7 @@ local trunkRandomN =
     mode = modes.RANDOM_256,
     uvs =
     {
-        {8, 5}, {4, 1}, 
+        {8, 5}, {4, 1},
     },
 }
 
@@ -112,7 +112,7 @@ local trunkRandomE =
     mode = modes.RANDOM_256,
     uvs =
     {
-        {4, 1}, {8, 5}, {4, 1}, 
+        {4, 1}, {8, 5}, {4, 1},
     },
 }
 
@@ -122,7 +122,7 @@ local trunkRandomS =
     mode = modes.RANDOM_256,
     uvs =
     {
-        {4, 1}, {4, 1}, {8, 5}, {4, 1}, 
+        {4, 1}, {4, 1}, {8, 5}, {4, 1},
     },
 }
 
@@ -132,17 +132,17 @@ local trunkRandomW =
     mode = modes.RANDOM_256,
     uvs =
     {
-        {4, 1}, {4, 1}, {4, 1}, {8, 5}, {4, 1}, 
+        {4, 1}, {4, 1}, {4, 1}, {8, 5}, {4, 1},
     },
 }
 
 --------------------------------------------------
 local function fences (model, textures, textures2)
-    return 
+    return
     {
         mode = 1,--dio.types.blockModes.AUTOTILE_4,
-        models = 
-        {   
+        models =
+        {
             {model = model,        textures = {neswtb = textures}, isTransparent = true},
             {model = model .. "_n",      textures = {neswtb = textures}, isTransparent = true},
             {model = model .. "_n",      textures = {neswtb = textures}, isTransparent = true, rotateY = 3},
