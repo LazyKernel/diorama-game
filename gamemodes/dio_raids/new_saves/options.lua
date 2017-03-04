@@ -4,8 +4,8 @@ local options =
     variations =
     {
         {
-            title = "RaidTest",
-            folder = "RaidTest/",
+            title = "default",
+            folder = "default/",
         },
     }
 }

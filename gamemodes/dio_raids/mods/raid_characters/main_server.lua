@@ -95,13 +95,13 @@ end
 
 --------------------------------------------------
 local function getCurrentRoomFolder ()
-    return "RaidTest/"--instance.isPlaying and "arena/" or "waiting_room/"
+    return "world/"--instance.isPlaying and "arena/" or "waiting_room/"
 end
 
 --------------------------------------------------
 local function createPlayerEntity (connectionId, accountId)
 
-    --[[local roomFolder = getCurrentRoomFolder ()
+    local roomFolder = getCurrentRoomFolder ()
     local roomEntityId = dio.world.ensureRoomIsLoaded (roomFolder)
 
     local chunkId = {0, 0, 0}
@@ -155,7 +155,7 @@ local function createPlayerEntity (connectionId, accountId)
 
     local eyeEntityId = dio.entities.create (roomEntityId, eyeComponents)
 
-    return playerEntityId, eyeEntityId]]
+    return playerEntityId, eyeEntityId
 end
 
 --------------------------------------------------
@@ -323,15 +323,15 @@ end
 --------------------------------------------------
 local function onClientConnected (event)
 
-    --local entityId, eyeEntityId = createPlayerEntity (event.connectionId, event.accountId)
+    local entityId, eyeEntityId = createPlayerEntity (event.connectionId, event.accountId)
 
     local connection =
     {
         connectionId = event.connectionId,
         accountId = event.accountId,
         playerName = nil,
-        --entityId = entityId,
-        --eyeEntityId = eyeEntityId,
+        entityId = entityId,
+        eyeEntityId = eyeEntityId,
         kills = 0,
         deaths = 0,
         livesLeft = instance.livesPerPlayer,
@@ -359,7 +359,7 @@ end
 local function onClientDisconnected (event)
 
     local connection = instance.connections [event.connectionId]
-    --dio.entities.destroy (connection.entityId)
+    dio.entities.destroy (connection.entityId)
     instance.connections [event.connectionId] = nil
 
     instance.connectionsCount = instance.connectionsCount - 1
