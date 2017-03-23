@@ -8,8 +8,12 @@ local modsToLoad =
     },
     {
         gameMode = "dio_raids",
-        modFolder = "raid_characters",
+        modFolder = "game_logic",
         versionRequired = {major = 1, minor = 0},
+    },
+    {
+        gameMode = "default",
+        modFolder = "motd",
     },
 }
 

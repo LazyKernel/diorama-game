@@ -329,11 +329,11 @@ local modSettings =
         world = true,
     },
 
-    callbacks = 
+    callbacks =
     {
         onLoad = onLoad,
         onUnload = function () dio.resources.destroyTexture ("CROSSHAIR") end,
-    },    
+    },
 }
 
 --------------------------------------------------
