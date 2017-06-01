@@ -53,6 +53,7 @@ s.healer = {
 --------------------------------------------------
 function s.tank ()
     local character = {
+        maxHealth = 4000,
         health = 4000,
         healthMultiplier = 1.0,
 
@@ -71,6 +72,7 @@ end
 --------------------------------------------------
 function s.damage ()
     local character = {
+        maxHealth = 1000,
         health = 1000,
         healthMultiplier = 1.0,
 
@@ -89,6 +91,7 @@ end
 --------------------------------------------------
 function s.healer ()
     local character = {
+        maxHealth = 900,
         health = 900,
         healthMultiplier = 1.0,
 

@@ -1,8 +1,12 @@
 local Classes = require ("gamemodes/dio_raids/mods/game_logic/classes")
 local UI = require ("gamemodes/dio_raids/mods/game_logic/ui")
+local SpellDefinitions = require ("gamemodes/dio_raids/mods/game_logic/spell_definitions")
 
 --------------------------------------------------
 local instance = nil
+
+--------------------------------------------------
+local spells = SpellDefinitions.spells
 
 --------------------------------------------------
 local function onServerEventReceived (event)
@@ -16,6 +20,25 @@ local function onClientConnected (event)
         self.myConnectionId = event.connectionId
         self.myAccountId = event.accountId
     end
+end
+
+--------------------------------------------------
+local function castSpell (spell_id)
+    local spell = spells [spell_id]
+    local player = instance.playerInfo
+
+    -- remember to do server side checks also
+    if spells == nil then
+        return
+    end
+
+    if player.class ~= spell.class then
+        return
+    end
+
+    -- ignoring cooldowns for debugging reasons
+
+    dio.clientChat.send(".cast " .. spell_id)
 end
 
 --------------------------------------------------
@@ -58,20 +81,22 @@ local function onLoad ()
 
     dio.resources.loadExtrudedTexture ("CHUNKS_EXTRUDED",    "textures/chunks_extruded_00.png")
 
-    instance = {}
+    instance =
+    {
+        playerInfo =
+        {
+            class = 2, -- TODO: change when using .init command
+            className = "healer",
+            castSpell = castSpell,
+        },
+    }
 
     local types = dio.types.clientEvents
     dio.events.addListener (types.SERVER_EVENT_RECEIVED, onServerEventReceived)
     dio.events.addListener (types.CLIENT_CONNECTED, onClientConnected)
     dio.events.addListener (types.NAMED_ENTITY_CREATED, onNamedEntityCreated)
 
-    -- temporary
-    local playerInfo =
-    {
-        class = "healer",
-    }
-
-    UI.onLoad (playerInfo)
+    UI.onLoad (instance.playerInfo)
 
 end
 

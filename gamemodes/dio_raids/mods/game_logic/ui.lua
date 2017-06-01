@@ -5,7 +5,7 @@ local Window = require ("resources/scripts/utils/window")
 local s = {}
 
 --------------------------------------------------
-local spells = nil
+local spells = SpellDefinitions.spells
 
 --------------------------------------------------
 local instance = nil
@@ -138,7 +138,14 @@ local function onKeyClicked (keyCode, keyModifiers, keyCharacter)
 
     local self = instance
 
-    
+    if keyCode and keyCode >= keyCodes ["1"] and keyCode <= keyCodes ["9"] then
+        if spells [ (keyCode - keyCodes ["1"] + 1) + self.currentPage * self.blocksPerPage] ~= nil then
+            spell_id = (keyCode - keyCodes ["1"] + 1) + self.currentPage * self.blocksPerPage
+            self.playerInfo.castSpell (spell_id)
+            --self.isDirty = true
+            return true
+        end
+    end
 
     return false
 end
@@ -156,14 +163,6 @@ function s.onLoad (playerInfo)
     local blocksPerPage = 9
     local rowHeight = iconScale * 16 + 2
 
-    if playerInfo.class == "tank" then
-        spells = SpellDefinitions.tank
-    elseif playerInfo.class == "damage" then
-        spells = SpellDefinitions.damage
-    elseif playerInfo.class == "healer" then
-        spells = SpellDefinitions.healer
-    end
-
     instance =
     {
         lowestBlockId = 1,
@@ -173,6 +172,7 @@ function s.onLoad (playerInfo)
         blocksPerPage = blocksPerPage,
         pages = 0, -- 0 indexed
         isDirty = true,
+        playerInfo = playerInfo,
 
         y = 0,
         w = ((iconScale * 16) + 1) * blocksPerPage + 1,

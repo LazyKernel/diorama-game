@@ -1,4 +1,5 @@
 local Classes = require ("gamemodes/dio_raids/mods/game_logic/classes")
+local SpellDefinitions = require ("gamemodes/dio_raids/mods/game_logic/spell_definitions")
 
 --------------------------------------------------
 local instance =
@@ -14,6 +15,9 @@ local instance =
     rocketEntityIds = {},
     nextRoundCanBePlayed = true,
 }
+
+--------------------------------------------------
+local spells = SpellDefinitions.spells
 
 --------------------------------------------------
 local generators =
@@ -39,7 +43,7 @@ end
 
 --------------------------------------------------
 local function getConnectionByName (name)
-    for connection in instance.connections do
+    for connectionId, connection in pairs(instance.connections) do
         if connection.playerName == name then
             return connection
         end
@@ -481,6 +485,17 @@ local function onServerTick (event)
 end
 
 --------------------------------------------------
+local function castSpell (casterConnection, spellId)
+    local spell = spells [spellId]
+
+    if casterConnection.class.role ~= spell.class then
+        return
+    end
+
+
+end
+
+--------------------------------------------------
 local function onChatReceived (event)
 
     if event.text:sub (1, 1) ~= "." then
@@ -495,8 +510,6 @@ local function onChatReceived (event)
     local connectionId = event.authorConnectionId
     local connection = instance.connections [connectionId]
 
-    dio.network.sendChat (connection.connectionId, "SERVER", "chat message received")
-
     if words [1] == ".init" and #words >= 3 then
         if words [2] == "tank" then
             connection.class = Classes.tank ()
@@ -509,7 +522,6 @@ local function onChatReceived (event)
             dio.network.sendChat (connection.connectionId, "SERVER", "Initialized " .. connection.playerName .. " as a damage.")
 
         elseif words [2] == "healer" then
-            print ("healer added")
             connection.class = Classes.healer ()
             connection.playerName = getRemainingWords (words, 2)
             dio.network.sendChat (connection.connectionId, "SERVER", "Initialized " .. connection.playerName .. " as a healer.")
@@ -522,25 +534,63 @@ local function onChatReceived (event)
         if #words <= 1 then
             dio.network.sendChat (connection.connectionId, "SERVER", "Your target was cleared.")
             connection.target = nil
+        else
+            local targetName = getRemainingWords (words, 1)
+            local targetConnection = getConnectionByName (targetName)
+            connection.target = targetConnection
+            dio.network.sendChat (connection.connectionId, "SERVER", "Your target is now " .. targetConnection.playerName)
         end
 
-        local targetName = getRemainingWords (words, 1)
-        local targetConnection = getConnectionByName (targetName)
-        connection.target = targetConnection
-        dio.network.sendChat (connection.connectionId, "SERVER", "Your target is now " .. targetConnection.playerName)
         event.cancel = true
 
-    elseif words [1] == ".heal" and #words >= 2 then
-        if connection.class.role ~= Classes.role.healer then
-            dio.network.sendChat (connection.connectionId, "SERVER", "You aren't a healer.")
-            return
+    elseif words [1] == ".cast" then
+        if #words <= 1 then
+            dio.network.sendChat (connection.connectionId, "SERVER", "No spell id specified.")
+        else
+            local spellId = tonumber (getRemainingWords (words, 1))
+            local spell = spells [spellId]
+
+            print ("attempting to cast a spell")
+            print ("spell id: " .. spellId)
+            print ("spell table:")
+            for k, v in pairs (spell) do
+                print(k, v)
+            end
+            print ("class id: " .. spell.class)
+            print ("conn class id: " .. connection.class.role)
+            if spell ~= nil then
+                if spell.class == connection.class.role then
+                    if spell.type == 1 then -- heal
+                        -- TODO: Check if enemy
+                        if spell.spreadOverTime == 0.0 then
+                            -- TODO: add gear stat modifiers, buffs etc.
+                            connection.target.class.health = connection.target.class.health + spell.baseAmount
+                            if connection.target.class.health > connection.target.class.maxHealth then
+                                connection.target.class.health = connection.target.class.maxHealth
+                            end
+                        else
+                            table.insert (connection.target.buffs, { spell = spell, timeElapsed = 0.0 })
+                        end
+                    elseif spell.type == 2 then -- damage
+                        if spell.spreadOverTime == 0.0 then
+                            -- TODO: add gear stat modifiers, buffs etc.
+                            connection.target.class.health = connection.target.class.health - spell.baseAmount
+                            if connection.target.class.health <= 0 then
+                                connection.target.class.health = 0
+                                -- TODO: death comes for you
+                            end
+                        else
+                            table.insert (connection.target.debuffs, { spell = spell, timeElapsed = 0.0 })
+                        end
+                    end
+
+                    dio.network.sendChat (connection.connectionId, "SERVER", connection.target.playerName .. ": " .. connection.target.class.health)
+                end
+            end
         end
 
-        if words [2] == "hot" then
-            dio.network.sendChat (connection.connectionId, "SERVER", "You can soon heal over time.")
-        elseif words [2] == "burst" then
-            dio.network.sendChat (connection.connectionId, "SERVER", "You can soon burst heal.")
-        end
+        event.cancel = true
+
     end
 end
 
