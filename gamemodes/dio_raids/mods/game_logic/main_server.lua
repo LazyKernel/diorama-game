@@ -343,7 +343,7 @@ local function onClientConnected (event)
         class = nil,
         target = nil,
         buffs = {},
-        debuggs = {},
+        debuffs = {},
     }
 
     instance.connections [event.connectionId] = connection
